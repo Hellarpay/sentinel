@@ -7,11 +7,11 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lib'))
 from misc import printdbg
 
 
-class TincoinConfig():
+class HellarConfig():
 
     @classmethod
     def slurp_config_file(self, filename):
-        # read tincoin.conf config but skip commented lines
+        # read hellar.conf config but skip commented lines
         f = io.open(filename)
         lines = []
         for line in f:
@@ -20,27 +20,27 @@ class TincoinConfig():
             lines.append(line)
         f.close()
 
-        # data is tincoin.conf without commented lines
+        # data is hellar.conf without commented lines
         data = ''.join(lines)
 
         return data
 
     @classmethod
     def get_rpc_creds(self, data, network='mainnet'):
-        # get rpc info from tincoin.conf
+        # get rpc info from hellar.conf
         match = re.findall(r'rpc(user|password|port)=(.*?)$', data, re.MULTILINE)
 
         # python >= 2.7
         creds = {key: value for (key, value) in match}
 
-        # standard Tincoin defaults...
-        default_port = 9858 if (network == 'mainnet') else 19858
+        # standard Hellar defaults...
+        default_port = 9989 if (network == 'mainnet') else 9988
 
-        # use default port for network if not specified in tincoin.conf
+        # use default port for network if not specified in hellar.conf
         if not ('port' in creds):
             creds[u'port'] = default_port
 
-        # convert to an int if taken from tincoin.conf
+        # convert to an int if taken from hellar.conf
         creds[u'port'] = int(creds[u'port'])
 
         # return a dictionary with RPC credential key, value pairs

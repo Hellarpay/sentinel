@@ -8,12 +8,12 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'lib'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 import config
 
-from tincoind import TincoinDaemon
-from tincoin_config import TincoinConfig
+from hellard import HellarDaemon
+from hellar_config import HellarConfig
 
 
-def test_tincoind():
-    config_text = TincoinConfig.slurp_config_file(config.tincoin_conf)
+def test_hellard():
+    config_text = HellarConfig.slurp_config_file(config.hellar_conf)
     network = 'mainnet'
     is_testnet = False
     genesis_hash = u'00000ffd590b1485b3caadc19b22e6379c733355108f107a430458cdf3407ab6'
@@ -23,15 +23,15 @@ def test_tincoind():
             is_testnet = True
             genesis_hash = u'00000bafbc94add76cb75e2ec92894837288a481e5c005f6563d91623bf8bc2c'
 
-    creds = TincoinConfig.get_rpc_creds(config_text, network)
-    tincoind = TincoinDaemon(**creds)
-    assert tincoind.rpc_command is not None
+    creds = HellarConfig.get_rpc_creds(config_text, network)
+    hellard = HellarDaemon(**creds)
+    assert hellard.rpc_command is not None
 
-    assert hasattr(tincoind, 'rpc_connection')
+    assert hasattr(hellard, 'rpc_connection')
 
-    # Tincoin testnet block 0 hash == 00000bafbc94add76cb75e2ec92894837288a481e5c005f6563d91623bf8bc2c
+    # Hellar testnet block 0 hash == 00000bafbc94add76cb75e2ec92894837288a481e5c005f6563d91623bf8bc2c
     # test commands without arguments
-    info = tincoind.rpc_command('getinfo')
+    info = hellard.rpc_command('getinfo')
     info_keys = [
         'blocks',
         'connections',
@@ -48,4 +48,4 @@ def test_tincoind():
     assert info['testnet'] is is_testnet
 
     # test commands with args
-    assert tincoind.rpc_command('getblockhash', 0) == genesis_hash
+    assert hellard.rpc_command('getblockhash', 0) == genesis_hash

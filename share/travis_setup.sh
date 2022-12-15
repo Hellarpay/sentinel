@@ -1,9 +1,9 @@
 #!/bin/bash
 set -evx
 
-mkdir ~/.tincoincore
+mkdir ~/.hellarcore
 
 # safety check
-if [ ! -f ~/.tincoincore/.tincoin.conf ]; then
-  cp share/tincoin.conf.example ~/.tincoincore/tincoin.conf
+if [ ! -f ~/.hellarcore/.hellar.conf ]; then
+  cp share/hellar.conf.example ~/.hellarcore/hellar.conf
 fi

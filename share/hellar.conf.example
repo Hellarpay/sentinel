@@ -11,11 +11,11 @@ spentindex=1
 
 # JSONRPC
 server=1
-rpcuser=tincoinrpc
+rpcuser=hellarrpc
 rpcpassword=abcdefghijklmnopqrstuvwxyz0123456789ABCDEF10
 rpcallowip=127.0.0.1
 Footer
-© 2022 GitHub, Inc.
+© 2022 Hellarpay, Inc.
 Footer navigation
 Terms
 Privacy

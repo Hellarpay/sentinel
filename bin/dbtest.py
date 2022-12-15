@@ -9,17 +9,17 @@ import config
 from models import Superblock, Proposal, GovernanceObject, Setting, Signal, Vote, Outcome, Watchdog
 from models import VoteSignals, VoteOutcomes
 from peewee import PeeweeException  # , OperationalError, IntegrityError
-from tincoind import TincoinDaemon
-import tincoinlib
+from hellard import HellarDaemon
+import hellarlib
 from decimal import Decimal
-tincoind = TincoinDaemon.from_tincoin_conf(config.tincoin_conf)
+hellarnd = HellarDaemon.from_hellar_conf(config.hellar_conf)
 import misc
 # ==============================================================================
 # do stuff here
 
 pr = Proposal(
     name='proposal7',
-    url='https://tincoincentral.com/proposal7',
+    url='https://hellar.io/proposal7',
     payment_address='yTC62huR4YQEPn9AJHjnQxxreHSbgAoatV',
     payment_amount=39.23,
     start_epoch=1483250400,
@@ -33,13 +33,13 @@ pr = Proposal(
 # )
 
 
-# TODO: make this a test, mock 'tincoind' and tie a test block height to a
+# TODO: make this a test, mock 'hellard' and tie a test block height to a
 # timestamp, ensure only unit testing a within_window method
 #
 # also, create the `within_window` or similar method & use that.
 #
 bh = 131112
-bh_epoch = tincoind.block_height_to_epoch(bh)
+bh_epoch = hellard.block_height_to_epoch(bh)
 
 fudge = 72000
 window_start = 1483689082 - fudge
@@ -56,7 +56,7 @@ else:
     print("Within window, we're good!")
 
 # pdb.set_trace()
-# tincoind.get_object_list()
+# hellard.get_object_list()
 # ==============================================================================
 # pdb.set_trace()
 1

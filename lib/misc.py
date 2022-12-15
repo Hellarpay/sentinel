@@ -50,7 +50,7 @@ class Bunch(object):
     def get(self, name):
         return self.__dict__.get(name, None)
 Footer
-© 2022 GitHub, Inc.
+© 2022 Hellarpay, Inc.
 Footer navigation
 Terms
 Privacy

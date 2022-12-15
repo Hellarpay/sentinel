@@ -1,5 +1,5 @@
 """
-tincoind JSONRPC interface
+hellard JSONRPC interface
 """
 import sys
 import os
@@ -13,7 +13,7 @@ from decimal import Decimal
 import time
 
 
-class TincoinDaemon():
+class HellarDaemon():
     def __init__(self, **kwargs):
         host = kwargs.get('host', '127.0.0.1')
         user = kwargs.get('user')
@@ -22,7 +22,7 @@ class TincoinDaemon():
 
         self.creds = (user, password, host, port)
 
-        # memoize calls to some tincoind methods
+        # memoize calls to some hellard methods
         self.governance_info = None
         self.gobject_votes = {}
 
@@ -31,10 +31,10 @@ class TincoinDaemon():
         return AuthServiceProxy("http://{0}:{1}@{2}:{3}".format(*self.creds))
 
     @classmethod
-    def from_tincoin_conf(self, tincoin_dot_conf):
-        from tincoin_config import TincoinConfig
-        config_text = TincoinConfig.slurp_config_file(tincoin_dot_conf)
-        creds = TincoinConfig.get_rpc_creds(config_text, config.network)
+    def from_hellar_conf(self, hellar_dot_conf):
+        from hellar_config import HellarConfig
+        config_text = HellarConfig.slurp_config_file(hellar_dot_conf)
+        creds = HellarConfig.get_rpc_creds(config_text, config.network)
 
         return self(**creds)
 
@@ -57,7 +57,7 @@ class TincoinDaemon():
         return golist
 
     def get_current_masternode_vin(self):
-        from tincoinlib import parse_masternode_status_vin
+        from hellarlib import parse_masternode_status_vin
 
         my_vin = None
 
@@ -142,7 +142,7 @@ class TincoinDaemon():
     # "my" votes refers to the current running masternode
     # memoized on a per-run, per-object_hash basis
     def get_my_gobject_votes(self, object_hash):
-        import tincoinlib
+        import hellarlib
         if not self.gobject_votes.get(object_hash):
             my_vin = self.get_current_masternode_vin()
             # if we can't get MN vin from output of `masternode status`,
@@ -154,7 +154,7 @@ class TincoinDaemon():
 
             cmd = ['gobject', 'getcurrentvotes', object_hash, txid, vout_index]
             raw_votes = self.rpc_command(*cmd)
-            self.gobject_votes[object_hash] = tincoinlib.parse_raw_votes(raw_votes)
+            self.gobject_votes[object_hash] = hellarlib.parse_raw_votes(raw_votes)
 
         return self.gobject_votes[object_hash]
 
@@ -178,11 +178,11 @@ class TincoinDaemon():
         return (current_height >= maturity_phase_start_block)
 
     def we_are_the_winner(self):
-        import tincoinlib
+        import hellarlib
         # find the elected MN vin for superblock creation...
         current_block_hash = self.current_block_hash()
         mn_list = self.get_masternodes()
-        winner = tincoinlib.elect_mn(block_hash=current_block_hash, mnlist=mn_list)
+        winner = hellarlib.elect_mn(block_hash=current_block_hash, mnlist=mn_list)
         my_vin = self.get_current_masternode_vin()
 
         # print "current_block_hash: [%s]" % current_block_hash
@@ -201,7 +201,7 @@ class TincoinDaemon():
         return (self.MASTERNODE_WATCHDOG_MAX_SECONDS // 2)
 
     def estimate_block_time(self, height):
-        import tincoinlib
+        import hellarlib
         """
         Called by block_height_to_epoch if block height is in the future.
         Call `block_height_to_epoch` instead of this method.
@@ -213,7 +213,7 @@ class TincoinDaemon():
         if (diff < 0):
             raise Exception("Oh Noes.")
 
-        future_seconds = tincoinlib.blocks_to_seconds(diff)
+        future_seconds = hellarlib.blocks_to_seconds(diff)
         estimated_epoch = int(time.time() + future_seconds)
 
         return estimated_epoch
@@ -241,7 +241,7 @@ class TincoinDaemon():
     @property
     def has_sentinel_ping(self):
         getinfo = self.rpc_command('getinfo')
-        return (getinfo['protocolversion'] >= config.min_tincoind_proto_version_with_sentinel_ping)
+        return (getinfo['protocolversion'] >= config.min_hellard_proto_version_with_sentinel_ping)
 
     def ping(self):
         self.rpc_command('sentinelping', config.sentinel_version)

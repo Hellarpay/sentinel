@@ -57,23 +57,23 @@ def is_database_correctly_configured():
     return configured
 
 
-def has_tincoin_conf():
+def has_hellar_conf():
     import config
     import io
 
-    valid_tincoin_conf = False
+    valid_hellar_conf = False
 
-    # ensure tincoin_conf exists & readable
+    # ensure hellar_conf exists & readable
     #
-    # if not, print a message stating that Tincoin Core must be installed and
-    # configured, including JSONRPC access in tincoin.conf
+    # if not, print a message stating that Hellar Core must be installed and
+    # configured, including JSONRPC access in hellar.conf
     try:
-        f = io.open(config.tincoin_conf)
-        valid_tincoin_conf = True
+        f = io.open(config.hellar_conf)
+        valid_hellar_conf = True
     except IOError as e:
         print(e)
 
-    return valid_tincoin_conf
+    return valid_hellar_conf
 
 
 # === begin main
@@ -95,8 +95,8 @@ def main():
         print("Please ensure correct database configuration.")
         sys.exit(1)
 
-    if not has_tincoin_conf():
-        print("TincoinCore must be installed and configured, including JSONRPC access in tincoin.conf")
+    if not has_hellar_conf():
+        print("HellarCore must be installed and configured, including JSONRPC access in hellar.conf")
         sys.exit(1)
 
 
